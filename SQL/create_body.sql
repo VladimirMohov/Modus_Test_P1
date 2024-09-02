@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users.auth(
 CREATE TABLE IF NOT EXISTS users.photos(
     photo_id SERIAL PRIMARY KEY,
     telegramID INTEGER REFERENCES users.auth(telegramID),
-    photo_url varchar(256) NOT NULL,
+    photo_path varchar(256) NOT NULL,
     upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ----------------------------
