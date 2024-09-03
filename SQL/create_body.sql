@@ -18,3 +18,15 @@ CREATE TABLE IF NOT EXISTS users.photos(
     upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ----------------------------
+
+----------------------------
+GRANT ALL PRIVILEGES ON SCHEMA users TO dev;
+----------------------------
+
+----------------------------
+GRANT ALL PRIVILEGES ON TABLE users.auth TO dev;
+----------------------------
+
+----------------------------
+GRANT ALL PRIVILEGES ON TABLE users.photos TO dev;
+----------------------------
