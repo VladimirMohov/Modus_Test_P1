@@ -69,6 +69,10 @@ class DB(object):
             logging.warning("Ошибка добавления пути к фото пользователю - {}".format(e))
             self._conn.rollback()
 
+    def add_user_list_photo(self, id_telegram: int, photo_list: List):
+        for photo in photo_list:
+            self.add_user_photo(id_telegram=id_telegram, photo_path=photo)
+
     def get_user_photos(self, id_telegram: int) -> List:
         """
         Получение списка путей к фотографиям пользователя.

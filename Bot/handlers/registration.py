@@ -17,17 +17,16 @@ load_dotenv(find_dotenv())
 _BOT_TOKEN = getenv("BOT_TOKEN")
 
 bot = Bot(token=_BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-_USER_ROUTER = Router()
+_USER_REGISTRY_ROUTER = Router()
 _ADMIN_ID = getenv("admin_id")
 
-@_USER_ROUTER.message(CommandStart())
+@_USER_REGISTRY_ROUTER.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
     """
     Отлов сообщения /start
     """
     temp_db = DB()
     person = temp_db.get_user(id_telegram=message.chat.id)
-    print(_ADMIN_ID)
     # Пользователь существует.
     if person is not None:
         await message.answer(StartMessage.old(person), parse_mode='html', reply_markup=kb.keyboard_start)
@@ -40,7 +39,7 @@ async def command_start_handler(message: Message) -> None:
         
     temp_db.close_connect()
 
-@_USER_ROUTER.callback_query(F.data == 'add')
+@_USER_REGISTRY_ROUTER.callback_query(F.data == 'add')
 async def add_user(cb: CallbackQuery):
     await cb.answer('')
     message = cb.message.text

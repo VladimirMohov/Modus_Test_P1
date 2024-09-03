@@ -21,3 +21,20 @@ add_user = InlineKeyboardMarkup(
         ]
     ]
 )
+
+keyboard_next = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(
+                text='Новое фото',
+                callback_data='save_new_photo'
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text='В главное меню',
+                callback_data='back'
+            )
+        ]
+    ]
+)
