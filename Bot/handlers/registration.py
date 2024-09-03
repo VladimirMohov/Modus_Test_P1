@@ -1,18 +1,22 @@
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
-from aiogram import html, Router, F, Bot
+from aiogram import Router, F, Bot
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 from utils.db import DB
-from ..message.builder import StartMessage
-from ..FSM.user_fsm import Photo
-from aiogram.fsm.context import FSMContext
-from ..kbds import reply as kb
+from Bot.message.builder import StartMessage
+from Bot.kbds import reply as kb
 from dotenv import load_dotenv, find_dotenv
 
 from os import getenv
 
+from dotenv import load_dotenv, find_dotenv
+
 load_dotenv(find_dotenv())
 
-bot = Bot(token=getenv('BOT_TOKEN'))
+_BOT_TOKEN = getenv("BOT_TOKEN")
+
+bot = Bot(token=_BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 _USER_ROUTER = Router()
 _ADMIN_ID = getenv("admin_id")
 

@@ -1,21 +1,15 @@
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-from aiogram.fsm.storage.redis import RedisStorage
+from .handlers.registration import _USER_ROUTER
 import os
 
-_BOT_TOKEN = os.getenv("BOT_TOKEN")
-_REDIS_HOST = os.getenv("redis_host") 
-_REDIS_PORT = os.getenv("redis_port")
-_REDIS_DB = os.getenv("redis_db")
-_REDIS_PASSWORD = os.getenv("redis_password")
+from dotenv import load_dotenv, find_dotenv
 
-storage = RedisStorage(
-    host=_REDIS_HOST, 
-    port=_REDIS_PORT,
-    db=_REDIS_DB,
-    password=_REDIS_PASSWORD,
-)
+load_dotenv(find_dotenv())
+
+_BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 bot = Bot(token=_BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-dp = Dispatcher(storage=storage)
+dp = Dispatcher()
+dp.include_routers(_USER_ROUTER)
