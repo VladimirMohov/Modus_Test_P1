@@ -3,7 +3,6 @@ from typing import List
 from os import getenv
 import logging
 
-
 class DB(object):
 
     _ADDRESS = None
@@ -83,6 +82,17 @@ class DB(object):
         except Exception as e:
             return []
         
+    def get_user(self, id_telegram: int):
+        try:
+            with self._conn.cursor() as cursor:
+                cursor.execute('SELECT * FROM users.get_user(%s)', (id_telegram,))
+                user = cursor.fetchall()[0]
+                return user
+        except Exception as e:
+            logging.warning("Ошибка получения пользователя - {}".format(e))
+            self._conn.rollback()
+            return None
+        
     def close_connect(self) -> None:
         self._conn.close()
 
@@ -90,8 +100,9 @@ if __name__ == "__main__":
     logging.basicConfig(filename='./error.log', level=logging.DEBUG)
 
     db = DB()
-    db.add_user(3, "testuser")
-    db.accept_request(3)
-    db.add_user_photo(3, "http://example.com/photo.jpg")
-    db.get_user_photos(3)
+    # db.add_user(3, "testuser")
+    # db.accept_request(3)
+    # db.add_user_photo(3, "http://example.com/photo.jpg")
+    # db.get_user_photos(3)
+    print(db.get_user(3))
     db.close_connect()
