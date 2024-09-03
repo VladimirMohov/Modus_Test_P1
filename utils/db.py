@@ -1,7 +1,7 @@
 import psycopg2
 from typing import List
 from os import getenv
-from dotenv import load_dotenv
+import logging
 
 
 class DB(object):
@@ -37,12 +37,11 @@ class DB(object):
         """
         try:
             with self._conn.cursor() as cursor:
-                cursor.callproc('users.add_user_auth', [id_telegram, username])
+                cursor.execute('CALL users.add_user_auth({}, \'{}\')'.format(id_telegram, username))
                 self._conn.commit()
         except Exception as e:
+            logging.warning("Ошибка добавления пользователя - {}".format(e))
             self._conn.rollback()
-        finally:
-            self._conn.close()
 
     def accept_request(self, user_id: int):
         """
@@ -51,12 +50,11 @@ class DB(object):
         """
         try:
             with self._conn.cursor() as cursor:
-                cursor.callproc('users.accept_request', [user_id])
+                cursor.execute('CALL users.accept_request({})'.format(user_id))
                 self._conn.commit()
         except Exception as e:
+            logging.warning("Ошибка изменения метки пользователя - {}".format(e))
             self._conn.rollback()
-        finally:
-            self._conn.close()
         
     def add_user_photo(self, id_telegram: int, photo_path: str) -> None:
         """
@@ -66,12 +64,11 @@ class DB(object):
         """
         try:
             with self._conn.cursor() as cursor:
-                cursor.callproc('users.insert_photo', [id_telegram, photo_path])
+                cursor.execute('CALL users.insert_photo({}, \'{}\')'.format(id_telegram, photo_path))
                 self._conn.commit()
         except Exception as e:
+            logging.warning("Ошибка добавления пути к фото пользователю - {}".format(e))
             self._conn.rollback()
-        finally:
-            self._conn.close()
 
     def get_user_photos(self, id_telegram: int) -> List:
         """
@@ -80,17 +77,21 @@ class DB(object):
         """
         try:
             with self._conn.cursor() as cursor:
-                cursor.callproc('users.get_photos', [id_telegram])
+                cursor.execute('CALL users.get_photos({})'.format(id_telegram))
                 photos = cursor.fetchall()
                 return [photo[0] for photo in photos]
         except Exception as e:
             return []
-        finally:
-            self._conn.close()
+        
+    def close_connect(self) -> None:
+        self._conn.close()
 
 if __name__ == "__main__":
+    logging.basicConfig(filename='./error.log', level=logging.DEBUG)
+
     db = DB()
-    db.add_user(2, "testuser")
-    db.accept_request(2)
-    db.add_user_photo(2, "http://example.com/photo.jpg")
-    db.get_user_photos(2)
+    db.add_user(3, "testuser")
+    db.accept_request(3)
+    db.add_user_photo(3, "http://example.com/photo.jpg")
+    db.get_user_photos(3)
+    db.close_connect()

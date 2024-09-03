@@ -5,10 +5,10 @@ from aiogram.fsm.storage.redis import RedisStorage
 import os
 
 _BOT_TOKEN = os.getenv("BOT_TOKEN")
-_REDIS_HOST = os.getenv("redis_host"), 
-_REDIS_PORT = os.getenv("redis_port"),
-_REDIS_DB = os.getenv("redis_db"),
-_REDIS_PASSWORD = os.getenv("redis_password"),
+_REDIS_HOST = os.getenv("redis_host") 
+_REDIS_PORT = os.getenv("redis_port")
+_REDIS_DB = os.getenv("redis_db")
+_REDIS_PASSWORD = os.getenv("redis_password")
 
 storage = RedisStorage(
     host=_REDIS_HOST, 
